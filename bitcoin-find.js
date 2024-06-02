@@ -1,4 +1,15 @@
 import CoinKey from 'coinkey';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+
+// Helper to get __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Use createRequire to require the .node file
+const require = createRequire(import.meta.url);
+const bitcoinKeys = require(path.resolve(__dirname, './build/Release/bitcoin_keys.node'));
 import walletsArray from './wallets.js';
 import chalk from 'chalk'
 import fs from 'fs';
@@ -12,6 +23,8 @@ function encontrarBitcoins(key, min, max){
     const startTime = Date.now()
 
     console.log('Buscando Bitcoins...')
+
+    console.log(generatePublic('00000000000000000000000000000000000000000000000000000000001ba534'))
 
     while(true){
     
@@ -33,6 +46,7 @@ function encontrarBitcoins(key, min, max){
         }
     
         let publicKey = generatePublic(pkey)
+        // console.log(publicKey)
         if (walletsSet.has(publicKey)){
             const tempo = (Date.now() - startTime)/1000
             console.log('Velocidade:', (Number(key) - Number(min))/ tempo, ' chaves por segundo')
@@ -58,9 +72,7 @@ function encontrarBitcoins(key, min, max){
 }
 
 function generatePublic(privateKey){
-    let _key = new CoinKey(new Buffer(privateKey, 'hex'))
-    _key.compressed = true
-    return _key.publicAddress
+    return bitcoinKeys.getBitcoinAddress(privateKey);
 }
 
 function generateWIF(privateKey){
