@@ -22,9 +22,7 @@ function encontrarBitcoins(key, min, max){
     const um = BigInt(1);
     const startTime = Date.now()
 
-    console.log('Buscando Bitcoins...')
-
-    console.log(generatePublic('00000000000000000000000000000000000000000000000000000000001ba534'))
+    console.log('Iniciando busca de Bitcoins...')
 
     while(true){
     
@@ -40,6 +38,10 @@ function encontrarBitcoins(key, min, max){
             segundos += 1000
             console.log(segundos/1000);
             if (segundos % 10000 == 0){
+              const tempo = (Date.now() - startTime) / 1000;
+              console.clear();
+              console.log('Resumo: ')
+              console.log('Velocidade:', (Number(key) - Number(min))/ tempo, ' chaves por segundo')
               console.log('Chaves buscadas: ', (key - min).toLocaleString('pt-BR'));    
               console.log('Ultima chave tentada: ',pkey )
             }
@@ -82,4 +84,4 @@ function generateWIF(privateKey){
 
 
 
-export default encontrarBitcoins;
+export default encontrarBitcoins;   
