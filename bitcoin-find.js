@@ -22,17 +22,22 @@ function encontrarBitcoins(key, min, max){
     const um = BigInt(1);
     const startTime = Date.now()
 
+    let zeroes = new Array(65).fill('');
+    for (let i=1;i<64;i++){
+        zeroes[i] = '0'.repeat(64 - i);
+    }
+
+
     console.log('Iniciando busca de Bitcoins...')
 
+    
     while(true){
     
-        key = key + um
+        key++;  
         
         pkey = key.toString(16)
-        while (pkey.length < 64){
-            pkey = '0' + pkey
-        }
-    
+        pkey = `${zeroes[pkey.length]}${pkey}`;
+        
     
         if (Date.now() - startTime > segundos){
             segundos += 1000
@@ -47,7 +52,7 @@ function encontrarBitcoins(key, min, max){
             }
         }
     
-        let publicKey = generatePublic(pkey)
+        let publicKey = bitcoinKeys.getBitcoinAddress(pkey)
         // console.log(publicKey)
         if (walletsSet.has(publicKey)){
             const tempo = (Date.now() - startTime)/1000
@@ -73,9 +78,6 @@ function encontrarBitcoins(key, min, max){
 
 }
 
-function generatePublic(privateKey){
-    return bitcoinKeys.getBitcoinAddress(privateKey);
-}
 
 function generateWIF(privateKey){
     let _key = new CoinKey(new Buffer(privateKey, 'hex'))
